@@ -1,0 +1,28 @@
+name: ORBI LUMIA GESTURE PRE-00 Baseline
+on:
+  pull_request:
+    paths:
+      - 'src/kit/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'docs/ORBI-GESTURE-PRE00-QA.md'
+      - '.github/workflows/lumia-gesture-pre00-ci.yml'
+  workflow_dispatch:
+jobs:
+  baseline:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
